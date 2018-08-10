@@ -51,8 +51,8 @@ def mouse(button, state, x, y):
 def converte(x, y):
     global pox_x, pos_y
 
-    pos_x = 2*(x/DIMX) - 1 # x é o parâmetro com o a posição em pixels
-    pos_y = 2*(y/DIMY) - 1 # y é o parâmetro com a posição em pixels;
+    pos_x = 2*(x/600) - 1 # x é o parâmetro com o a posição em pixels
+    pos_y = -(2*(y/600) - 1) # y é o parâmetro com a posição em pixels;
                            # lembrando que y_pos irá crescer para baixo
 
     print(pos_x)

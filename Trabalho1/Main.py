@@ -11,12 +11,15 @@ DIMY = 600
 pos_x = 0.0
 pos_y = 0.0
 
+pontos = []
+
 
 def main():
     # Inicializa glut e cria janela
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA) #Determinando o tipo da janela com um buffer duplo
                                                  # e o modelo de representação de cores
+
     glutInitWindowSize(DIMX, DIMY) #Tamanho da tela é 600x600
     glutCreateWindow('Trabalho 1 - Larissa Galeno')
     glutMouseFunc(mouse)
@@ -35,7 +38,9 @@ def display():
     glColor3f(1.0, 0.0, 1.0)
     glPointSize(10.0)
     glBegin(GL_POINTS)
-    glVertex2f(pos_x, pos_y)
+
+    for ponto in pontos:
+        glVertex2f(ponto[0], ponto[1])
 
     glEnd()
 
@@ -49,11 +54,16 @@ def mouse(button, state, x, y):
         glutPostRedisplay()
 
 def converte(x, y):
-    global pox_x, pos_y
+    global pos_x, pos_y
 
-    pos_x = 2*(x/600) - 1 # x é o parâmetro com o a posição em pixels
-    pos_y = -(2*(y/600) - 1) # y é o parâmetro com a posição em pixels;
+    pos_x = 2*(x/DIMX) - 1 # x é o parâmetro com o a posição em pixels
+    pos_y = -(2*(y/DIMY) - 1) # y é o parâmetro com a posição em pixels;
                            # lembrando que y_pos irá crescer para baixo
+
+    pontos.append([pos_x, pos_y]) # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
+                                  # representando a pos_x e a pos_y
+
+    print(pontos)
 
     print(pos_x)
     print(pos_y)

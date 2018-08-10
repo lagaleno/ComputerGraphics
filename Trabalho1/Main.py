@@ -1,3 +1,4 @@
+# coding=utf-8
 
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -23,6 +24,7 @@ def main():
     glutInitWindowSize(DIMX, DIMY) #Tamanho da tela é 600x600
     glutCreateWindow('Trabalho 1 - Larissa Galeno')
     glutMouseFunc(mouse)
+    glutKeyboardFunc(keyboard)
 
 
     glutDisplayFunc(display)
@@ -39,12 +41,8 @@ def display():
     glPointSize(10.0)
     glBegin(GL_LINE_STRIP)
 
-    condicao = 0
     for ponto in pontos:
-        if condicao == 4:
-            break
         glVertex2f(ponto[0], ponto[1])
-        condicao = condicao+1
 
     glEnd()
 
@@ -56,6 +54,13 @@ def mouse(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
         converte(x, y)
         glutPostRedisplay()
+
+def keyboard(key,  x,  y):
+
+    key = key.decode("utf-8")
+    if str(key) == 'r':
+        print("Olá")
+
 
 def converte(x, y):
     global pos_x, pos_y
@@ -71,6 +76,18 @@ def converte(x, y):
 
     print(pos_x)
     print(pos_y)
+
+def distancia(ponto):
+    #Fórmula da distancia entre dois pontos => dist = a^2 + b^2
+
+    a = pontos[ponto][0] - pontos[ponto][1]
+    b = pontos[ponto+1][0] - pontos[ponto+1][1]
+
+    dist = (a**2 + b**2)**(1/2)
+
+    return dist
+
+
 
 
 

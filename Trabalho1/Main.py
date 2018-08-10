@@ -37,10 +37,14 @@ def display():
 
     glColor3f(1.0, 0.0, 1.0)
     glPointSize(10.0)
-    glBegin(GL_POINTS)
+    glBegin(GL_LINE_STRIP)
 
+    condicao = 0
     for ponto in pontos:
+        if condicao == 4:
+            break
         glVertex2f(ponto[0], ponto[1])
+        condicao = condicao+1
 
     glEnd()
 

@@ -19,8 +19,6 @@ def main():
                                                  # e o modelo de representação de cores
     glutInitWindowSize(DIMX, DIMY) #Tamanho da tela é 600x600
     glutCreateWindow('Trabalho 1 - Larissa Galeno')
-    gluOrtho2D(0, DIMX-1, DIMY-1, 0)
-
     glutMouseFunc(mouse)
 
 
@@ -51,13 +49,14 @@ def mouse(button, state, x, y):
         glutPostRedisplay()
 
 def converte(x, y):
-    global x_pos, y_pos
+    global pox_x, pos_y
 
-    x_pos = 2*(x/600) - 1 # x é o parâmetro com o a posição em pixels
-    y_pos = 2*(y/600) - 1
+    pos_x = 2*(x/DIMX) - 1 # x é o parâmetro com o a posição em pixels
+    pos_y = 2*(y/DIMY) - 1 # y é o parâmetro com a posição em pixels;
+                           # lembrando que y_pos irá crescer para baixo
 
-    print(x_pos)
-    print(y_pos)
+    print(pos_x)
+    print(pos_y)
 
 
 

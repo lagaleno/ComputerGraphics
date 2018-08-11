@@ -42,10 +42,20 @@ def display():
     glBegin(GL_LINE_STRIP)
 
     for ponto in pontos:
-        glVertex2f(ponto[0], ponto[1])
+        glVertex2f(ponto[0], ponto[1]) #Desenhando as linhas entre os pontos selecionados
 
     glEnd()
 
+    '''
+    glColor3f(0.4, 0.4, 0.4)
+    glBegin(GL_POINTS) #Para desenhar pontos
+
+    for ponto in pontos:
+        glVertex2f(ponto[0], ponto[1]) #Desenhando os pontos ao clicar na posção
+
+    glEnd()
+
+    '''
     glFlush()
     glutSwapBuffers()
 
@@ -60,8 +70,12 @@ def keyboard(key, x, y):
     key = key.decode("utf-8")
     if str(key) == 'r':
         suaviza()
+        glutPostRedisplay()
 
 
+'''
+Converte as coordenadas vinda do mouse para o padrão o do OpenGL
+'''
 def converte(x, y):
     global pos_x, pos_y
 
@@ -72,24 +86,12 @@ def converte(x, y):
     pontos.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
     # representando a pos_x e a pos_y
 
-    # print(pontos)
-
-    # print(pos_x)
-    # print(pos_y)
 
 
-def distancia(ponto):
-    # Caso eu esteja olhando o último ponto não existe uma linha para calcular a distancia
-    if (ponto + 1) != len(pontos):
-        # Fórmula da distancia entre dois pontos => dist = a^2 + b^2
-        a = pontos[ponto][0] - pontos[ponto][1]
-        b = pontos[ponto + 1][0] - pontos[ponto + 1][1]
 
-        r = (a ** 2 + b ** 2) ** (1 / 2)
-
-        return r
-
-
+'''
+Função para dividir meu segmento de reta em 4 partes iguais e adicionar esse pontos em um vetor auxiliar
+'''
 def pontoMedio(ponto):
 
     if (ponto+1) != len(pontos):
@@ -111,7 +113,14 @@ def pontoMedio(ponto):
         novosPontos.append([x2, y2])
 
 
+'''
+Função para suavizar as quinas
+'''
 def suaviza():
+    global pontos, novosPontos
+
+    novosPontos = []
+    print("Estou aqui")
     novosPontos.append(pontos[0])
 
     for index, ponto in enumerate(pontos):
@@ -119,8 +128,7 @@ def suaviza():
 
     novosPontos.append(pontos[-1])
 
-    print(pontos)
-    print(novosPontos)
+    pontos = novosPontos
 
 
 if __name__ == '__main__':

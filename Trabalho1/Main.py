@@ -6,14 +6,14 @@ from OpenGL.GL import *
 import sys
 
 # Variáveis Globais
-DIMX = 600
-DIMY = 600
+DIMX = 600 #Definindo tamanho da tela na horizontal
+DIMY = 600 #Definindo tamanho da tela na vertical
 
 pos_x = 0.0
 pos_y = 0.0
 
-pontos = []
-novosPontos = []
+pontos = [] #Essa lista no inicio irá guardar os pontos que o usuário escolheu, e depois os pontos processados pelo algoritmo
+novosPontos = [] #novosPontos funcionará como uma lista auxiliar para a lista de pontos
 
 def main():
     # Inicializa glut e cria janela
@@ -110,9 +110,9 @@ def dividir(ponto):
         x2 = (xMedio + pontos[ponto+1][0])/2
         y2 = (yMedio + pontos[ponto+1][1])/2
 
-        novosPontos.append([x1, y1])
-        novosPontos.append([xMedio, yMedio])
-        novosPontos.append([x2, y2])
+        novosPontos.append([x1, y1]) #Estou aidicionando a lista auxiliar, novosPontos, o ponto que está no primeiro quarto de reta
+        novosPontos.append([xMedio, yMedio]) #Estou aidiconando a lista auxiliar, novosPontos, o ponto que está no meio do meu segmento de reta
+        novosPontos.append([x2, y2]) #Estou adicionando na lista auxiliar, novosPontos, o ponto que está no segundo quarto de reta
 
 
 '''

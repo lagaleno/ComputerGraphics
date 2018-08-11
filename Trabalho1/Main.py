@@ -60,7 +60,7 @@ def display():
 
 def mouse(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-        converte(x, y)
+        converter(x, y)
         glutPostRedisplay()
 
 
@@ -68,18 +68,17 @@ def keyboard(key, x, y):
     global pontos
 
     key = key.decode("utf-8")
-    if str(key) == 'r':
-        suaviza()
-        glutPostRedisplay()
+    if str(key) == 'r': #Apertar a tecla r para rodar o algoritmo de suavizar quinas
+        suavizar()
 
     if str(key) == 'b':
         pontos = []
 
-
+    glutPostRedisplay()
 '''
 Converte as coordenadas vinda do mouse para o padrão o do OpenGL
 '''
-def converte(x, y):
+def converter(x, y):
     global pos_x, pos_y
 
     pos_x = 2 * (x / DIMX) - 1  # x é o parâmetro com o a posição em pixels
@@ -93,9 +92,9 @@ def converte(x, y):
 
 
 '''
-Função para dividir meu segmento de reta em 4 partes iguais e adicionar esse pontos em um vetor auxiliar
+Função para dividir meu segmento de reta em 4 partes iguais e adicionar esse pontos em um vetor auxiliar a partir do calculo do ponto médio
 '''
-def pontoMedio(ponto):
+def dividir(ponto):
 
     if (ponto+1) != len(pontos):
 
@@ -119,14 +118,14 @@ def pontoMedio(ponto):
 '''
 Função para suavizar as quinas
 '''
-def suaviza():
+def suavizar():
     global pontos, novosPontos
 
     novosPontos = []
     novosPontos.append(pontos[0])
 
     for index, ponto in enumerate(pontos):
-        pontoMedio(index)
+        dividir(index)
 
     novosPontos.append(pontos[-1])
 

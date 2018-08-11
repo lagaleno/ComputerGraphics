@@ -13,7 +13,6 @@ pos_x = 0.0
 pos_y = 0.0
 
 pontos = []
-dist = []
 novosPontos = []
 
 def main():
@@ -46,7 +45,7 @@ def display():
 
     glEnd()
 
-    '''
+    glPointSize(4.0)
     glColor3f(0.4, 0.4, 0.4)
     glBegin(GL_POINTS) #Para desenhar pontos
 
@@ -55,7 +54,6 @@ def display():
 
     glEnd()
 
-    '''
     glFlush()
     glutSwapBuffers()
 
@@ -67,10 +65,15 @@ def mouse(button, state, x, y):
 
 
 def keyboard(key, x, y):
+    global pontos
+
     key = key.decode("utf-8")
     if str(key) == 'r':
         suaviza()
         glutPostRedisplay()
+
+    if str(key) == 'b':
+        pontos = []
 
 
 '''
@@ -120,7 +123,6 @@ def suaviza():
     global pontos, novosPontos
 
     novosPontos = []
-    print("Estou aqui")
     novosPontos.append(pontos[0])
 
     for index, ponto in enumerate(pontos):

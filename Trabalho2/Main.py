@@ -60,7 +60,7 @@ def display():
     glEnd()
 
     glPointSize(8.0)
-    glColor3f(0.4, 0.4, 0.4)
+    glColor3f(1.0, 0.5, 1.0)
     glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
 
     if len(pontoE) > 0:

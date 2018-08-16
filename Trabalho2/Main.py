@@ -13,9 +13,9 @@ pos_x = 0.0
 pos_y = 0.0
 
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
-pontoE = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
+pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 
-pontos = [] #Essa lista no inicio irá guardar os pontos que o usuário escolheu para o poligono
+pontosPoligono = [] #Essa lista no inicio irá guardar os pontos que o usuário escolheu para o poligono
 
 def main():
 
@@ -44,7 +44,7 @@ def display():
 
     glBegin(GL_LINE_STRIP) #poderia torcar essa linha por glBegin(GL_LINE_LOOP)
 
-    for ponto in pontos:
+    for ponto in pontosPoligono:
         glVertex2f(ponto[0], ponto[1]) #Desenhando as linhas entre os pontos selecionados
 
     glEnd()
@@ -53,19 +53,23 @@ def display():
     glColor3f(0.4, 0.4, 0.4)
     glBegin(GL_POINTS) #Para desenhar pontos
 
-    for ponto in pontos:
+    for ponto in pontosPoligono:
         glVertex2f(ponto[0], ponto[1]) #Desenhando os pontos ao clicar na posição
 
 
     glEnd()
 
+    #Dando um destaque ao ponto que iremos descobrir se está dentro ou fora do Poligono
     glPointSize(8.0)
     glColor3f(1.0, 0.5, 1.0)
     glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
 
-    if len(pontoE) > 0:
-        for ponto in pontoE:
-            glVertex2f(ponto[0], ponto[1])
+    '''
+        Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
+    '''
+    if len(pontos) > 0:
+        for ponto in pontos: #Caso o usuário queira entrar com múltiplos pontos
+            glVertex2f(ponto[0], ponto[1]) # Desenho o ponto em questão
 
     glEnd()
 
@@ -79,10 +83,8 @@ def mouse(button, state, x, y):
         converter(x, y)
         glutPostRedisplay()
 
-
-
 def keyboard(key, x, y):
-    global pontos, acabouPoligono, pontoE
+    global pontosPoligono, acabouPoligono, pontos
 
     key = key.decode("utf-8")
     if str(key) == 'r': #Apertar a tecla r para dizer ao algoritmo que o usuário acabou o poligono e vai entrar com o ponto
@@ -90,14 +92,12 @@ def keyboard(key, x, y):
             Nesse caso se o usuário apertar 'r' o programa está juntando o último ponto que o usuário clicou com o primeiro.
             Fechando, assim, o meu poligono. Poderia ter usado GL_LINE_LOOP que o openGL teria fechado automaticamente
         '''
-        pontos.append(pontos[0])
-
+        pontosPoligono.append(pontosPoligono[0])
         acabouPoligono = True
-        print("Terminei o Poligono")
 
     if str(key) == 'b': #Limpar o canvas
+        pontosPoligono = []
         pontos = []
-        pontoE = []
 
     glutPostRedisplay()
 
@@ -106,18 +106,18 @@ def keyboard(key, x, y):
 Converte as coordenadas vinda do mouse para o padrão o do OpenGL
 '''
 def converter(x, y):
-    global pos_x, pos_y, pontoE, pontos
+    global pos_x, pos_y, pontos, pontosPoligono
 
     pos_x = 2 * (x / DIMX) - 1  # x é o parâmetro com o a posição em pixels
     pos_y = -(2 * (y / DIMY) - 1)  # y é o parâmetro com a posição em pixels;
     # lembrando que y_pos irá crescer para baixo
 
     if acabouPoligono is False:
-        pontos.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
+        pontosPoligono.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
         # representando a pos_x e a pos_y
     else:
-        pontoE.append([pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
-        print(pontoE)
+        pontos.append([pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
+        print(pontos)
 
 
 

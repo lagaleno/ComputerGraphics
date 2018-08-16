@@ -68,8 +68,7 @@ def display():
         Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
     '''
     if len(pontos) > 0:
-        for ponto in pontos: #Caso o usuário queira entrar com múltiplos pontos
-            glVertex2f(ponto[0], ponto[1]) # Desenho o ponto em questão
+        glVertex2f(pontos[0][0], pontos[0][1]) # Desenho o ponto em questão
 
     glEnd()
 
@@ -116,7 +115,8 @@ def converter(x, y):
         pontosPoligono.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
         # representando a pos_x e a pos_y
     else:
-        pontos.append([pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
+        pontos.clear()
+        pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
         print(pontos)
 
 

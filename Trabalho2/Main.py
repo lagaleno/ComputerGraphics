@@ -13,7 +13,7 @@ pos_x = 0.0
 pos_y = 0.0
 
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
-ponto = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
+pontoE = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 
 pontos = [] #Essa lista no inicio irá guardar os pontos que o usuário escolheu para o poligono
 
@@ -56,7 +56,19 @@ def display():
     for ponto in pontos:
         glVertex2f(ponto[0], ponto[1]) #Desenhando os pontos ao clicar na posição
 
+
     glEnd()
+
+    glPointSize(8.0)
+    glColor3f(0.4, 0.4, 0.4)
+    glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
+
+    if len(pontoE) > 0:
+        for ponto in pontoE:
+            glVertex2f(ponto[0], ponto[1])
+
+    glEnd()
+
 
     glFlush()
     glutSwapBuffers()
@@ -64,16 +76,13 @@ def display():
 
 def mouse(button, state, x, y):
     if button == GLUT_LEFT_BUTTON and state == GLUT_DOWN:
-
-        if acabouPoligono is False:
-            converter(x, y)
-            glutPostRedisplay()
-
+        converter(x, y)
+        glutPostRedisplay()
 
 
 
 def keyboard(key, x, y):
-    global pontos, acabouPoligono
+    global pontos, acabouPoligono, pontoE
 
     key = key.decode("utf-8")
     if str(key) == 'r': #Apertar a tecla r para dizer ao algoritmo que o usuário acabou o poligono e vai entrar com o ponto
@@ -88,6 +97,7 @@ def keyboard(key, x, y):
 
     if str(key) == 'b': #Limpar o canvas
         pontos = []
+        pontoE = []
 
     glutPostRedisplay()
 
@@ -96,7 +106,7 @@ def keyboard(key, x, y):
 Converte as coordenadas vinda do mouse para o padrão o do OpenGL
 '''
 def converter(x, y):
-    global pos_x, pos_y
+    global pos_x, pos_y, pontoE, pontos
 
     pos_x = 2 * (x / DIMX) - 1  # x é o parâmetro com o a posição em pixels
     pos_y = -(2 * (y / DIMY) - 1)  # y é o parâmetro com a posição em pixels;
@@ -106,7 +116,8 @@ def converter(x, y):
         pontos.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
         # representando a pos_x e a pos_y
     else:
-        ponto.append([pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
+        pontoE.append([pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
+        print(pontoE)
 
 
 

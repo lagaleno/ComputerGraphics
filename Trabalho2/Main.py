@@ -115,7 +115,7 @@ def converter(x, y):
         pontosPoligono.append([pos_x, pos_y])  # No minha lista Pontos vou possuir listar dentro que possuem somente dois elementos
         # representando a pos_x e a pos_y
     else:
-        pontos.clear()
+        pontos.clear() #Limpo a lista, ou seja, o ponto que estava antes para ter somente um ponto
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
         print(pontos)
 

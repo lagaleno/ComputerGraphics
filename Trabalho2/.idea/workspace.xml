@@ -11,7 +11,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Trabalho2$Main.coverage" NAME="Main Coverage Results" MODIFIED="1534464902167" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Trabalho2$Main.coverage" NAME="Main Coverage Results" MODIFIED="1534465252515" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="-1602283816">
@@ -35,12 +35,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="3839" />
+          <entry key="py" value="4060" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="3839" />
+          <entry key="Python" value="4060" />
         </counts>
       </usages-collector>
     </session>
@@ -50,13 +50,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="532">
-              <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
+            <state relative-caret-position="442">
+              <caret line="140" column="99" selection-start-line="140" selection-start-column="99" selection-end-line="140" selection-end-column="99" />
               <folding>
                 <element signature="e#16#41#0" expanded="true" />
-                <marker date="1534464900798" expanded="true" signature="4863:5430" ph="..." />
-                <marker date="1534464900798" expanded="true" signature="5462:5467" ph="..." />
-                <marker date="1534464900798" expanded="true" signature="5462:5607" ph="..." />
+                <marker date="1534465231636" expanded="true" signature="5056:5623" ph="..." />
+                <marker date="1534465231636" expanded="true" signature="5655:5660" ph="..." />
+                <marker date="1534465231636" expanded="true" signature="5655:5786" ph="..." />
               </folding>
             </state>
           </provider>
@@ -211,13 +211,13 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="532">
-          <caret line="178" column="13" selection-start-line="178" selection-start-column="13" selection-end-line="178" selection-end-column="13" />
+        <state relative-caret-position="442">
+          <caret line="140" column="99" selection-start-line="140" selection-start-column="99" selection-end-line="140" selection-end-column="99" />
           <folding>
             <element signature="e#16#41#0" expanded="true" />
-            <marker date="1534464900798" expanded="true" signature="4863:5430" ph="..." />
-            <marker date="1534464900798" expanded="true" signature="5462:5467" ph="..." />
-            <marker date="1534464900798" expanded="true" signature="5462:5607" ph="..." />
+            <marker date="1534465231636" expanded="true" signature="5056:5623" ph="..." />
+            <marker date="1534465231636" expanded="true" signature="5655:5660" ph="..." />
+            <marker date="1534465231636" expanded="true" signature="5655:5786" ph="..." />
           </folding>
         </state>
       </provider>

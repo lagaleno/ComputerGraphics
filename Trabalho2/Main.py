@@ -138,12 +138,18 @@ def converter(x, y):
 def pontoPoligono():
     cont = intercepta()
 
-    print(cont)
+    if cont%2 == 0: #No caso de ser par o número de interceções,sginifica que está fora do poligono
+        print("O ponto está Fora do Poligono")
+
+    else:
+        print("O ponto está Dentro do polihono")
 
 def intercepta():
     cont = 0 #Irá contar quantas vezes a reta intercepta o poligono
     p1 = 0
     p2 = 0
+
+
     '''
         Para as retas se intersseptarem é preciso que ocorra;
             (r1) (a, b) X (a, d) * (a, b) X (a, c) < 0 e
@@ -174,6 +180,7 @@ def intercepta():
 def produtoVetorial(a, b, c, d):
     # A fórmula do produto vetorial consiste em:
     # (a, b) x (c, d) = a*d - b*c
+
     pv = (a*d) - (b*c)
 
     return pv

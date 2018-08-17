@@ -12,6 +12,9 @@ DIMY = 600 #Definindo tamanho da tela na vertical
 pos_x = 0.0
 pos_y = 0.0
 
+reta_y = 0.0 #Coordana Y que irá seguir o mesmo valor do Y do ponto que estão avaliando
+reta_x = reta_y + 1.000 #Coordenada X para o segundo ponto para desenhar a minha reta
+
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
 pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 
@@ -59,18 +62,28 @@ def display():
 
     glEnd()
 
-    #Dando um destaque ao ponto que iremos descobrir se está dentro ou fora do Poligono
-    glPointSize(8.0)
-    glColor3f(1.0, 0.5, 1.0)
-    glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
-
-    '''
-        Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
-    '''
     if len(pontos) > 0:
+
+        #Dando um destaque ao ponto que iremos descobrir se está dentro ou fora do Poligono
+        glPointSize(8.0)
+        glColor3f(1.0, 0.5, 1.0)
+        glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
+
+        '''
+            Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
+        '''
         glVertex2f(pontos[0][0], pontos[0][1]) # Desenho o ponto em questão
 
-    glEnd()
+        glEnd()
+
+        glColor3f(1.0, 0.0, 0.0)
+
+        glBegin(GL_LINE_STRIP)  # poderia torcar essa linha por glBegin(GL_LINE_LOOP)
+
+        glVertex2f(pontos[0][0], pontos[0][1])  # Desenhando as linhas entre os pontos selecionados
+        glVertex2f(pontos[0][1] + 1000, pontos[0][1])
+
+        glEnd()
 
 
     glFlush()
@@ -93,6 +106,9 @@ def keyboard(key, x, y):
         '''
         pontosPoligono.append(pontosPoligono[0])
         acabouPoligono = True
+
+    if str(key) == 'j':
+        pontoPoligono()
 
     if str(key) == 'b': #Limpar o canvas
         pontosPoligono = []
@@ -117,8 +133,50 @@ def converter(x, y):
     else:
         pontos.clear() #Limpo a lista, ou seja, o ponto que estava antes para ter somente um ponto
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
-        print(pontos)
 
+
+def pontoPoligono():
+    cont = intercepta()
+
+    print(cont)
+
+def intercepta():
+    cont = 0 #Irá contar quantas vezes a reta intercepta o poligono
+    p1 = 0
+    p2 = 0
+    '''
+        Para as retas se intersseptarem é preciso que ocorra;
+            (r1) (a, b) X (a, d) * (a, b) X (a, c) < 0 e
+            (r2) (c, d) X (c, a) * (c, d) X (c, b) < 0
+    '''
+
+    for ponto in pontosPoligono:
+
+        # Conta do r1
+        p1 = produtoVetorial(pontos[0][0], pontos[0][1], pontos[0][0], ponto[0]) #Primeiro Produto vetorial
+        p2 = produtoVetorial(pontos[0][0], pontos[0][1], pontos[0][0], ponto[1]) #Segundo Produto vetorial
+
+        r1 = p1 * p2 #r1 representa o primeiro resultado
+
+        # Conta do r2
+        p1 = produtoVetorial(ponto[0], ponto[1], ponto[0], pontos[0][0])
+        p2 = produtoVetorial(ponto[0], ponto[1], ponto[0], pontos[0][1])
+
+        r2 = p1 * p2
+
+        if r1 < 0 and r2 < 0:
+            cont = cont + 1
+
+    return cont
+
+
+
+def produtoVetorial(a, b, c, d):
+    # A fórmula do produto vetorial consiste em:
+    # (a, b) x (c, d) = a*d - b*c
+    pv = (a*d) - (b*c)
+
+    return pv
 
 
 

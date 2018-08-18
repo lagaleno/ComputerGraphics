@@ -12,8 +12,6 @@ DIMY = 600 #Definindo tamanho da tela na vertical
 pos_x = 0.0
 pos_y = 0.0
 
-reta_y = 0.0 #Coordana Y que irá seguir o mesmo valor do Y do ponto que estão avaliando
-reta_x = reta_y + 1.000 #Coordenada X para o segundo ponto para desenhar a minha reta
 
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
 pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
@@ -39,6 +37,9 @@ def main():
 
 
 def display():
+
+    global reta_x, reta_y
+
     glClearColor(1.0, 1.0, 1.0, 1.0)  # Mudando a cor do fundo para branco
     glClear(GL_COLOR_BUFFER_BIT)  # Carregando a cor do fundo no Buffer
 
@@ -81,7 +82,7 @@ def display():
         glBegin(GL_LINE_STRIP)  # poderia torcar essa linha por glBegin(GL_LINE_LOOP)
 
         glVertex2f(pontos[0][0], pontos[0][1])  # Desenhando as linhas entre os pontos selecionados
-        glVertex2f(pontos[0][1] + 1000, pontos[0][1])
+        glVertex2f(pontos[1][0], pontos[1][1])
 
         glEnd()
 
@@ -133,40 +134,65 @@ def converter(x, y):
     else:
         pontos.clear() #Limpo a lista, ou seja, o ponto que estava antes para ter somente um ponto
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
+        pontos.insert(1, [pos_y + 2.000, pos_y])
 
 
 def pontoPoligono():
+
     cont = intercepta()
 
     if cont%2 == 0: #No caso de ser par o número de interceções,sginifica que está fora do poligono
         print("O ponto está Fora do Poligono")
 
     else:
-        print("O ponto está Dentro do polihono")
+        print("O ponto está Dentro do Poligono")
 
 def intercepta():
     cont = 0 #Irá contar quantas vezes a reta intercepta o poligono
-    p1 = 0
-    p2 = 0
-
 
     '''
         Para as retas se intersseptarem é preciso que ocorra;
-            (r1) (a, b) X (a, d) * (a, b) X (a, c) < 0 e
-            (r2) (c, d) X (c, a) * (c, d) X (c, b) < 0
+            (r1) (ABx, ABy) X (ACx, ACy) * (ABx, ABy) X (ADx, ADyx) < 0 e
+            (r2) (CDx, CDy) X (CAx, CAy) * (CDx, CDy) X (CBx, CBy) < 0
     '''
 
-    for ponto in pontosPoligono:
+    for i in range(0, len(pontosPoligono)-2):
+
+        #Sendo AB o segmento de reta do meu Poligono, e CD o segmento de reta do ponto que eu quero saber se está dentro do poligono a um ponto externo
+
+        ABx = pontosPoligono[i+1][0] - pontosPoligono[i][0] #ABx representa a coordenada X do segmento de reta AB
+        ABy = pontosPoligono[i+1][1] - pontosPoligono[i][1] #ABy representa a coordenada Y do segmento de reta AB
+
+        ACx = pontos[0][0] - pontosPoligono[i][0] #ACx representa a coordenada X do segmento de reta AC
+        ACy = pontos[0][1] - pontosPoligono[i][1] #ACy representa a coordenada Y do segmento de reta AC
+
+        ADx = pontos[1][0] - pontosPoligono[i][0] #ADx representa a coordenada X do segmento de reta AD
+        ADy = pontos[1][1] - pontosPoligono[i][1] #ADy representa a coordenada Y do segmento de reta AD
+
 
         # Conta do r1
-        p1 = produtoVetorial(pontos[0][0], pontos[0][1], pontos[0][0], ponto[0]) #Primeiro Produto vetorial
-        p2 = produtoVetorial(pontos[0][0], pontos[0][1], pontos[0][0], ponto[1]) #Segundo Produto vetorial
+        p1 = produtoVetorial(ABx, ABy, ACx, ACy) #Primeiro Produto vetorial
+        p2 = produtoVetorial(ABx, ABy, ADx, ADy) #Segundo Produto vetorial
 
+        print(p1, p2)
         r1 = p1 * p2 #r1 representa o primeiro resultado
 
+        #Sendo CD o meu sgmento de reta fora do Poligono
+
+        CDx = pontos[1][0] - pontos[0][1] #CDx representa a coordenada X do segmento de reta CD
+        CDy = pontos[1][1] - pontos[0][1] #CDy representa a coordenada Y do segmento de reta CD
+
+        CAx = pontosPoligono[i][0] - pontos[0][0] #CAx represneta a coordenada X do segmento de reta CA
+        CAy = pontosPoligono[i][1] - pontos[0][1] #CAy representa a coordenada Y do segmento de reta CA
+
+        CBx = pontosPoligono[i+1][0] - pontos[0][0] #CBx representa a coordenada X do segmeneto de reta CB
+        CBy = pontosPoligono[i+1][0] - pontos[0][0] #CBy representa a coordenada Y do segmento de reta CB
+
         # Conta do r2
-        p1 = produtoVetorial(ponto[0], ponto[1], ponto[0], pontos[0][0])
-        p2 = produtoVetorial(ponto[0], ponto[1], ponto[0], pontos[0][1])
+        p1 = produtoVetorial(CDx, CDy, CAx, CAy)
+        p2 = produtoVetorial(CDx, CDy, CBx, CBy)
+
+        print(p1, p2)
 
         r2 = p1 * p2
 
@@ -177,17 +203,11 @@ def intercepta():
 
 
 
-def produtoVetorial(a, b, c, d):
+def produtoVetorial(x1, y1, x2, y2):
     # A fórmula do produto vetorial consiste em:
-    # (a, b) x (c, d) = a*d - b*c
+    # (x1, y1) x (x2, y2) = x1*y2 - y1*x2
 
-    pv = (a*d) - (b*c)
-
-    return pv
-
-
-
-
+    return (x1 * y2) - (y1 * x2)
 
 
 

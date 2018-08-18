@@ -12,7 +12,6 @@ DIMY = 600 #Definindo tamanho da tela na vertical
 pos_x = 0.0
 pos_y = 0.0
 
-
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
 pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 
@@ -136,6 +135,8 @@ def converter(x, y):
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
         pontos.insert(1, [pos_y + 2.000, pos_y])
 
+        print(pontos)
+
 
 def pontoPoligono():
 
@@ -156,7 +157,7 @@ def intercepta():
             (r2) (CDx, CDy) X (CAx, CAy) * (CDx, CDy) X (CBx, CBy) < 0
     '''
 
-    for i in range(0, len(pontosPoligono)-2):
+    for i in range(0, len(pontosPoligono)-1):
 
         #Sendo AB o segmento de reta do meu Poligono, e CD o segmento de reta do ponto que eu quero saber se está dentro do poligono a um ponto externo
 
@@ -174,7 +175,6 @@ def intercepta():
         p1 = produtoVetorial(ABx, ABy, ACx, ACy) #Primeiro Produto vetorial
         p2 = produtoVetorial(ABx, ABy, ADx, ADy) #Segundo Produto vetorial
 
-        print(p1, p2)
         r1 = p1 * p2 #r1 representa o primeiro resultado
 
         #Sendo CD o meu sgmento de reta fora do Poligono
@@ -189,27 +189,22 @@ def intercepta():
         CBy = pontosPoligono[i+1][0] - pontos[0][0] #CBy representa a coordenada Y do segmento de reta CB
 
         # Conta do r2
-        p1 = produtoVetorial(CDx, CDy, CAx, CAy)
-        p2 = produtoVetorial(CDx, CDy, CBx, CBy)
+        p3 = produtoVetorial(CDx, CDy, CAx, CAy)
+        p4 = produtoVetorial(CDx, CDy, CBx, CBy)
 
-        print(p1, p2)
 
-        r2 = p1 * p2
+        r2 = p3 * p4
 
         if r1 < 0 and r2 < 0:
             cont = cont + 1
 
     return cont
 
-
-
 def produtoVetorial(x1, y1, x2, y2):
     # A fórmula do produto vetorial consiste em:
     # (x1, y1) x (x2, y2) = x1*y2 - y1*x2
 
     return (x1 * y2) - (y1 * x2)
-
-
 
 
 if __name__ == '__main__':

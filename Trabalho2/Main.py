@@ -62,20 +62,38 @@ def display():
 
     glEnd()
 
+
     if len(pontos) > 0:
 
         #Dando um destaque ao ponto que iremos descobrir se está dentro ou fora do Poligono
-        glPointSize(8.0)
-        glColor3f(1.0, 0.5, 1.0)
-        glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
 
+        if dentro:
+            glPointSize(8.0)
+            glColor3f(1.0, 0.5, 1.0) #Se o ponto estiver DENTRO do Poligono ele será pintado de ROSA
+
+            glBegin(GL_POINTS) #Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
+
+            '''
+                Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
+            '''
+            glVertex2f(pontos[0][0], pontos[0][1]) # Desenho o ponto em questão
+
+            glEnd()
+        else:
+
+            glPointSize(8.0)
+            glColor3f(1.0, 0.0, 0.0) #Se o ponto estiver FORA do poligono ele será pintado de VERMELHO
+            glBegin(GL_POINTS)  # Para desenhar o ponto que o algoritmo irá verificar se está dentro ou fora do Poligono
+
+            '''
+                Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
+            '''
+            glVertex2f(pontos[0][0], pontos[0][1])  # Desenho o ponto em questão
+
+            glEnd()
+
+        # Desenhar a reta auxiliar que conecta o ponto com o um lado exterior
         '''
-            Caso o vetor não esteja vazio, ou seja, caso o meu usuário já tenha terminado de entrar com o poligono e selecionou o ponto que quer saber se está dentro ou fora. 
-        '''
-        glVertex2f(pontos[0][0], pontos[0][1]) # Desenho o ponto em questão
-
-        glEnd()
-
         glColor3f(1.0, 0.0, 0.0)
 
         glBegin(GL_LINE_STRIP)  # poderia torcar essa linha por glBegin(GL_LINE_LOOP)
@@ -84,7 +102,7 @@ def display():
         glVertex2f(pontos[1][0], pontos[1][1])
 
         glEnd()
-
+        '''
 
     glFlush()
     glutSwapBuffers()
@@ -107,12 +125,11 @@ def keyboard(key, x, y):
         pontosPoligono.append(pontosPoligono[0])
         acabouPoligono = True
 
-    if str(key) == 'j':
-        pontoPoligono()
 
     if str(key) == 'b': #Limpar o canvas
         pontosPoligono = []
         pontos = []
+        acabouPoligono = False
 
     glutPostRedisplay()
 
@@ -134,17 +151,19 @@ def converter(x, y):
         pontos.clear() #Limpo a lista, ou seja, o ponto que estava antes para ter somente um ponto
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
         pontos.insert(1, [pos_y + 2.000, pos_y])
-
+        pontoPoligono()
 
 def pontoPoligono():
-
+    global dentro
     cont = intercepta()
 
     if cont%2 == 0: #No caso de ser par o número de interceções,sginifica que está fora do poligono
         print("O ponto está Fora do Poligono")
+        dentro = False
 
     else:
         print("O ponto está Dentro do Poligono")
+        dentro = True
 
 def intercepta():
     cont = 0 #Irá contar quantas vezes a reta intercepta o poligono

@@ -13,9 +13,11 @@ pos_x = 0.0
 pos_y = 0.0
 
 acabouPoligono = False #Variável booleana que irá determinar se está no momento do usuário escolher o ponto isolado para o algoritmo analisar se está dentro ou fora
-pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 
+pontos = [] #Representa o ponto que eu quero saber se está dentro ou fora do meu poligono
 pontosPoligono = [] #Essa lista no inicio irá guardar os pontos que o usuário escolheu para o poligono
+
+dentro = False #Variável booleana que irá dizer se o ponto está dentro ou fora para colorir da cor correspondente
 
 def main():
 
@@ -36,8 +38,6 @@ def main():
 
 
 def display():
-
-    global reta_x, reta_y
 
     glClearColor(1.0, 1.0, 1.0, 1.0)  # Mudando a cor do fundo para branco
     glClear(GL_COLOR_BUFFER_BIT)  # Carregando a cor do fundo no Buffer
@@ -135,8 +135,6 @@ def converter(x, y):
         pontos.insert(0, [pos_x, pos_y]) #Adiciono o ponto que eu quero saber se está dentro ou não do Poligono
         pontos.insert(1, [pos_y + 2.000, pos_y])
 
-        print(pontos)
-
 
 def pontoPoligono():
 
@@ -186,14 +184,14 @@ def intercepta():
         CAy = pontosPoligono[i][1] - pontos[0][1] #CAy representa a coordenada Y do segmento de reta CA
 
         CBx = pontosPoligono[i+1][0] - pontos[0][0] #CBx representa a coordenada X do segmeneto de reta CB
-        CBy = pontosPoligono[i+1][0] - pontos[0][0] #CBy representa a coordenada Y do segmento de reta CB
+        CBy = pontosPoligono[i+1][1] - pontos[0][1] #CBy representa a coordenada Y do segmento de reta CB
 
         # Conta do r2
-        p3 = produtoVetorial(CDx, CDy, CAx, CAy)
-        p4 = produtoVetorial(CDx, CDy, CBx, CBy)
+        p1 = produtoVetorial(CDx, CDy, CAx, CAy)
+        p2 = produtoVetorial(CDx, CDy, CBx, CBy)
 
 
-        r2 = p3 * p4
+        r2 = p1 * p2
 
         if r1 < 0 and r2 < 0:
             cont = cont + 1

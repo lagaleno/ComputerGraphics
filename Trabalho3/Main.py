@@ -3,6 +3,7 @@
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
+import math
 import sys
 
 # Variáveis Globais
@@ -12,8 +13,9 @@ DIMY = 600 #Definindo tamanho da tela na vertical
 pos_x = 0.0
 pos_y = 0.0
 
-#acabouConjPontos = False
 conj_pontos = [] #Representa o conjunto de pontos da minha entrada que quero encontrar o Fecho Convexo
+
+pontos = [] #Lista de pontos do meu fecho convexo
 
 def main():
 
@@ -70,7 +72,6 @@ def converter(x, y):
     conj_pontos.append([pos_x, pos_y])
 
 def keyboard(key, x, y):
-    global acabouConjPontos
 
     key = key.decode("utf-8")
     if str(key) == 'r': #Apertar a tecla r para dizer ao algoritmo que o usuário acabou de entrar com o conjunto de pontos
@@ -87,19 +88,64 @@ def keyboard(key, x, y):
 
 def jarvis():
 
-    #v1 representa o vértice inicial de menor coordenada y
+    global pontos
+
+    #p0 representa o ponto inicial de menor coordenada y
     conj_pontos.sort(key=lambda k: k[1]) #Ordeando de maneira crescente a lisa de entrada deconjunto depontos
-    v1 = conj_pontos[0] #Com isso v1 terá o vértice com o menor y! Que está na primeira posição do conj_pontos
-    v2 = proximo()
+    pontos.append(conj_pontos[0]) #Com isso p0 terá o vértice com o menor y! Que está na primeira posição do conj_pontos
+    pontos.append(proximo(pontos[0], [1, 0])) #pegando o p2
+
+    print(pontos)
+    i = 1
+
+    while pontos[i] != pontos[0]:
+
+        pontos[i].append(proximo(pontos[i-1], ))
+        i = i+1
 
 
-def proximo():
+'''
+    O retorno da função é o ponto que possui a menor angulação com o vetor.
+'''
+def proximo(ponto, vetor):
+
+    menor = [] #A variavel menor irá guardar o ponto que possui a angulação menor
+    cos_ant = -2
 
     #Retorna um ponto p tal que o angulo de v e p0p seja minimo
-    pass
 
-def angulo():
-    pass
+    menor = ponto
+
+    for p in conj_pontos:
+        cos = angulo(vetor, )
+
+        if cos > cos_ant:
+            #muda menor
+            pass
+
+'''
+    Para calcular o angulo, iremos usar o Produto interno para achar o cos(teta);
+    O angulo que tiver o maior cos(teta) será o próximo ponto, pois terá a angulação menor.
+    
+    Sendo v2 o vetor entre os dois pontos
+
+    O retorno da função é cos(teta) entre o vetor que sai do ponto e o vetor que liga os pontos.
+'''
+def angulo(v1, v2):
+
+    #Fórmula do Produto interno
+    # cos(teta) = c = <v1,v2> / |v1||v2|
+
+    norma_v1 = math.sqrt(v1[0]**2 + v1[1]**2)
+
+    norma_v2 = math.sqrt(v2[0]**2 + v2[1]**2)
+
+    cos = ((v1[0] * v2[0]) + (v1[1] * v2[1]))/(norma_v1 * norma_v2)
+
+    print(cos)
+
+    return cos
+
 
 if __name__ == '__main__':
     main()

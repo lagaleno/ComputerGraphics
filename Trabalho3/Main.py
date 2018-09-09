@@ -33,7 +33,6 @@ def main():
 
     return
 
-
 def display():
     glClearColor(1.0, 1.0, 1.0, 1.0)  # Mudando a cor do fundo para branco
     glClear(GL_COLOR_BUFFER_BIT)  # Carregando a cor do fundo no Buffer
@@ -51,8 +50,8 @@ def display():
     glColor3f(0.4, 0.4, 0.4)
     glBegin(GL_LINE_STRIP)
 
-    for p in pontos:
-        glVertex2f(p[0], p[1])  # Desenhando as linhas entre os pontos do Fecho Convexo
+    for ponto in pontos:
+        glVertex2f(ponto[0], ponto[1])  # Desenhando as linhas entre os pontos do Fecho Convexo
 
     glEnd()
 
@@ -69,19 +68,19 @@ def mouse(button, state, x, y):
 '''
 Converte as coordenadas vinda do mouse para o padrão o do OpenGL
 '''
-
-
 def converter(x, y):
     global pos_x, pos_y, conj_pontos
 
     pos_x = 2 * (x / DIMX) - 1  # x é o parâmetro com o a posição em pixels
     pos_y = -(2 * (y / DIMY) - 1)  # y é o parâmetro com a posição em pixels;
-    # lembrando que y_pos irá crescer para baixo
+    # lembrando que pos_y irá crescer para baixo
 
-    conj_pontos.append([pos_x, pos_y])
+    conj_pontos.append([pos_x, pos_y]) #Adicionando a minha lista de entrada os pontos com as coordenadas certas
 
 
 def keyboard(key, x, y):
+    global conj_pontos, pontos
+
     key = key.decode("utf-8")
     if str(key) == 'r':  # Apertar a tecla r para dizer ao algoritmo que o usuário acabou de entrar com o conjunto de pontos
         '''
@@ -90,7 +89,8 @@ def keyboard(key, x, y):
         jarvis()
 
     if str(key) == 'b':  # Limpar o canvas
-        pass
+        conj_pontos = []
+        pontos = []
 
     glutPostRedisplay()
 
@@ -98,62 +98,60 @@ def keyboard(key, x, y):
 def jarvis():
     global pontos
 
-    # p0 representa o ponto inicial de menor coordenada y
-
-    print(conj_pontos)
     conj_pontos.sort(key=lambda k: k[1])  # Ordeando de maneira crescente a lisa de entrada deconjunto depontos
-    pontos.append(conj_pontos[0]) #acho o p0
-    pontos.append(proximo(pontos[0], 1, 0)) #acho o p1
-    print(pontos)
+    pontos.append(conj_pontos[0]) #acho o p0 que representa o ponto inicial de menor coordenada y
+    #acho o próximo ponto do meu fecho convexo;
+    pontos.append(proximo(pontos[0], 1, 0)) #Sendo que estou passando o vetor [1, 0] que o vetor que sai do meu p0
+
 
     i = 1
+    # Enquanto o próximo for diferente do primeiro, eu rodo o loop
     while pontos[i] != pontos[0]:
-        print('Entrei no loop do Jarvis', i)
-        #vetor = [pontos[i][0] - pontos[i-1][0], pontos[i][1] - pontos[i-1][1]]
 
-        v1_x = pontos[i][0] - pontos[i-1][0]
-        v1_y = pontos[i][1] - pontos[i-1][1]
+        # Achando o vetor que está entre o ponto que estou analisando e o candidato a próximo
+        v1_x = pontos[i][0] - pontos[i-1][0] #coordenada x
+        v1_y = pontos[i][1] - pontos[i-1][1] #coordenada y
 
-        pontos.append(proximo(pontos[i], v1_x, v1_y))
+        pontos.append(proximo(pontos[i], v1_x, v1_y)) #Assim analiso se o ponto é realmente válido para ser o próximo, se for adiciono a minha lista do fecho convexo
         i = i+1
 
 
 '''
     O retorno da função é o ponto que possui a menor angulação com o vetor.
 '''
-
-
 def proximo(ponto, v1_x, v1_y):
-    # A variavel menor irá guardar o ponto que possui a angulação menor
-    menor_x = 0
-    menor_y = 0
+    # A variavel menor irá guardar o ponto que possui a angulação menor; Inicializada com -2, pois qualquer angulo será maior que esse
     cos_ant = -2
 
-    # Retorna um ponto p tal que o angulo de v e p0p seja minimo
+    #Varáve irá guarda as coordenadas do ponto que possui o menor angulo entre os vetores
+    menor_x = 0 #Coordanada x
+    menor_y = 0 #Coordenada y
 
+
+    # Retorna um ponto p tal que o angulo de v1 e v2 (p0p) seja minimo
     i = 0
     while i < len(conj_pontos):
 
+        # Se o ponto que estou analisando é o mesmo ponto que o loop está, não tem necessidade de fazer a conta, pois ele com certeza não será
         if ponto == conj_pontos[i]:
             pass
 
+        #Caso seja diferente eu efetivamente faço a conta
         else:
-            print('Entrei no loop que testa os pontos 1 a 1', i)
+            # Calculo o vetor entre o ponto que estou analisando com os outros pontos para analisar o angulo
+            v2_x = conj_pontos[i][0] - ponto[0] #coordenada x
+            v2_y = conj_pontos[i][1] - ponto[1] #coordenada y
 
-            v2_x = conj_pontos[i][0] - ponto[0]
-            v2_y = conj_pontos[i][1] - ponto[1]
+            cos = angulo(v1_x, v1_y, v2_x, v2_y) #Calculo o cos entre v1 e v2 na busca do maior cos, que então será o menor angulo
 
-            cos = angulo(v1_x, v1_y, v2_x, v2_y)
-
-            if cos > cos_ant:
-                cos_ant = cos
-                menor_x = conj_pontos[i][0]
+            if cos > cos_ant: #Se o retorno qe eu tive for maior que o anterior significa que eu encontrei um ponto mais qualificado para o meu fecho convexo
+                cos_ant = cos # Se é mais qualificado eu troco
+                menor_x = conj_pontos[i][0] #E então a variável menor fica com o valor do ponto que o loop está olhando
                 menor_y = conj_pontos[i][1]
-
-                print('Achei um cos maior', cos, menor_x, menor_y)
 
         i = i+1
 
+    # Retorno em formato de lista para adicionar a minha lista de pontos
     return [menor_x, menor_y]
 
 
@@ -165,8 +163,6 @@ def proximo(ponto, v1_x, v1_y):
 
     O retorno da função é cos(teta) entre o vetor que sai do ponto e o vetor que liga os pontos.
 '''
-
-
 def angulo(v1_x, v1_y, v2_x, v2_y):
     # Fórmula do Produto interno
     # cos(teta) = c = <v1,v2> / |v1||v2|

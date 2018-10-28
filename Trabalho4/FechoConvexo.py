@@ -11,11 +11,13 @@ class FechoConvexo:
 
     def jarvis(self):
 
+
         self.conj_pontos.sort(key=lambda k: k[1])  # Ordeando de maneira crescente a lisa de entrada deconjunto depontos
+
         self.fecho_convexo.append(self.conj_pontos[0]) #acho o p0 que representa o ponto inicial de menor coordenada y
+
         #acho o próximo ponto do meu fecho convexo;
         self.fecho_convexo.append(self.proximo(self.fecho_convexo[0], 1, 0)) #Sendo que estou passando o vetor [1, 0] que o vetor que sai do meu p0
-
 
         i = 1
         # Enquanto o próximo for diferente do primeiro, eu rodo o loop
@@ -26,6 +28,7 @@ class FechoConvexo:
             v1_y = self.fecho_convexo[i][1] - self.fecho_convexo[i-1][1] #coordenada y
 
             self.fecho_convexo.append(self.proximo(self.fecho_convexo[i], v1_x, v1_y)) #Assim analiso se o ponto é realmente válido para ser o próximo, se for adiciono a minha lista do fecho convexo
+
             i = i+1
 
         return self.fecho_convexo

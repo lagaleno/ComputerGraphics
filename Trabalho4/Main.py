@@ -5,6 +5,8 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 from Delaunay import Delaunay
+from FechoConvexo import FechoConvexo
+
 
 
 # Variáveis Globais
@@ -15,6 +17,8 @@ pos_x = 0.0
 pos_y = 0.0
 
 conj_pontos = []  # Representa o conjunto de pontos da minha entrada que quero encontrar o Fecho Convexo
+triangulos = []
+poligono = []
 
 
 def main():
@@ -46,6 +50,24 @@ def display():
 
     glEnd()
 
+    glPointSize(4.0)
+    glColor3f(0.4, 0.4, 0.4)
+    glBegin(GL_LINE_STRIP)
+
+    for ponto in poligono:
+        glVertex2f(ponto[0], ponto[1])  # Desenhando as linhas entre os pontos do Fecho Convexo
+
+    glEnd()
+
+    glPointSize(4.0)
+    glColor3f(0.4, 0.4, 0.4)
+    glBegin(GL_LINE_STRIP)
+
+    for triangulo in triangulos:
+        glVertex2f(triangulo[0], triangulo[1])  # Desenhando os triangulos
+
+    glEnd()
+
     glFlush()
     glutSwapBuffers()
 
@@ -70,7 +92,7 @@ def converter(x, y):
 
 
 def keyboard(key, x, y):
-    global conj_pontos
+    global conj_pontos, triangulos, poligono
 
     key = key.decode("utf-8")
     if str(key) == 'r':  # Apertar a tecla r para dizer ao algoritmo que o usuário acabou de entrar com o conjunto de pontos
@@ -78,12 +100,12 @@ def keyboard(key, x, y):
             Nesse caso se o usuário apertar 'r' o programa irá entende que o usuário já entrou com o conjunto de pontos
         '''
         # Se o usuário apertar r devo começar o algorimo da Traingulação
+        fechoConvexo = FechoConvexo(conj_pontos)
+        poligono = fechoConvexo.jarvis()
 
-        triangulacao = Delaunay(conj_pontos)
-        triangulacao.encontraTriangulo()
+        triangulacao = Delaunay(conj_pontos, poligono)
+        triangulos = triangulacao.encontraTriangulo()
 
-    if str(key) == 'b':  # Limpar o canvas
-        conj_pontos = []
 
     glutPostRedisplay()
 

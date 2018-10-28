@@ -46,9 +46,19 @@ class Delaunay:
             print(self.visitar)
 
             #adicionando as arestar que o programa deve visitar
-            for ponto in self.poligono:
-                if self.he[-3][0] == ponto
+            j = 0
+            while len(self.poligono) > j:
+                #Testo para adicionar as arestas qu NÃO pertencem ao fecho convexo para visitar
 
+                if j < len(self.poligono) and self.he[-3] == self.poligono[j] and self.he[-2] == self.poligono[j+1]:
+                    
+                    pass #significa que essa aresta está no fecho convexo
+
+                elif j < len(self.poligono) and self.he[-2] == self.poligono[j] and self.he[-1] == self.poligono[j+1]:
+                    pass  # significa que essa aresta está no fecho convexo
+
+                elif j < len(self.poligono) and self.he[-1] == self.poligono[j] and self.he[-3] == self.poligono[j+1]:
+                    pass
 
         return triangulos
 

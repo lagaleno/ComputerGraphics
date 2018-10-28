@@ -32,33 +32,22 @@ class Delaunay:
 
         i = 0
         while len(self.visitar) != 0:
-            print(i)
             vertice = self.encontraMaiorAngulo(self.visitar[i][0], self.visitar[i][1])
 
             self.he.append(self.visitar[i][0])
             self.he.append(self.visitar[i][1])
             self.he.append(vertice)
 
+            print(self.he)
+
             triangulos = self.he.copy()
             triangulos.append(self.visitar[i][0])
 
             self.visitar.remove(self.visitar[0])
-            print(self.visitar)
 
-            #adicionando as arestar que o programa deve visitar
-            j = 0
-            while len(self.poligono) > j:
-                #Testo para adicionar as arestas qu NÃO pertencem ao fecho convexo para visitar
+            #adicionando as arestar que o programa deve visitar desconsiderado a que já faz parte do Fecho convexo
+            
 
-                if j < len(self.poligono) and self.he[-3] == self.poligono[j] and self.he[-2] == self.poligono[j+1]:
-                    
-                    pass #significa que essa aresta está no fecho convexo
-
-                elif j < len(self.poligono) and self.he[-2] == self.poligono[j] and self.he[-1] == self.poligono[j+1]:
-                    pass  # significa que essa aresta está no fecho convexo
-
-                elif j < len(self.poligono) and self.he[-1] == self.poligono[j] and self.he[-3] == self.poligono[j+1]:
-                    pass
 
         return triangulos
 

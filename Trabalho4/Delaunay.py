@@ -1,106 +1,122 @@
-from FechoConvexo import FechoConvexo
-import math
+import numpy
+from math import sqrt
+
 
 class Delaunay:
+    def __init__(self, center=(0, 0), radius=9999):
+        #Centro e raio para o super triangulo
+        #Opcionais, coloquei o centro em 0,0 e raio 9999 para ter certeza de englobar todos
 
-    def __init__(self, conj_pontos, poligono):
-        self.conj_pontos = conj_pontos
-        self.poligono = poligono
-        self.he = []
-        self.visitar = []
+        center = numpy.asarray(center)
 
-    def encontraTriangulo(self):
-        self.poligono = self.encontraFecho()
+        # Cria coordenadas pra os cantos do frame em que o super triangulo se encontra
+        self.cantos = [center+radius*numpy.array((-1, -1)),
+                       center+radius*numpy.array((+1, -1)),
+                       center+radius*numpy.array((+1, +1)),
+                       center+radius*numpy.array((-1, +1))]
 
-        #Encontrando o primeiro triangulo a partir do maior angulo
-        #que a primeira aresta do poligono do fecho convexo faz
-        vertice = self.encontraMaiorAngulo(self.poligono[0], self.poligono[1])
+        # Create dois dicionarios para armazenar vizinhanca dos triangulo e circulos
+        self.triangulos = {}
+        self.circulos = {}
 
-        #Adiciono o primeiro Triangulo na estrutura Half edge
-        self.he.append(self.poligono[0])
-        self.he.append(self.poligono[1])
-        self.he.append(vertice)
+        T1 = (0, 1, 3)
+        T2 = (2, 3, 1)
+        self.triangulos[T1] = [T2, None, None]
+        self.triangulos[T2] = [T1, None, None]
 
-        #Estrutura "triangulo" auxiliar para ajudar no desenho, de forma que eu feche o triangulo
-        triangulos = self.he.copy()
-        triangulos.append(self.he[0])
+        # Computa centro e raio do circulo para cada triangulo
+        for t in self.triangulos:
+            self.circulos[t] = self.circumcentro(t)
 
-        #Adicionando na fila visitar as arestas que não pertencem ao Fecho Convexo
-        self.visitar.append([self.he[1], self.he[2]])
-        self.visitar.append([self.he[2], self.he[0]])
+    def circumcentro(self, tri):
+        #Computa centro e raio da circunferencia
+        pts = numpy.asarray([self.cantos[v] for v in tri])
+        pts2 = numpy.dot(pts, pts.T)
+        A = numpy.bmat([[2 * pts2, [[1],
+                                 [1],
+                                 [1]]],
+                      [[[1, 1, 1, 0]]]])
 
+        b = numpy.hstack((numpy.sum(pts * pts, axis=1), [1]))
+        x = numpy.linalg.solve(A, b)
+        bar_cantos = x[:-1]
+        centro = numpy.dot(bar_cantos, pts)
 
-        i = 0
-        while len(self.visitar) != 0:
-            vertice = self.encontraMaiorAngulo(self.visitar[i][0], self.visitar[i][1])
+        raio = numpy.sum(numpy.square(pts[0] - centro))  # Distancia ao quadrado
+        return (centro, raio)
 
-            self.he.append(self.visitar[i][0])
-            self.he.append(self.visitar[i][1])
-            self.he.append(vertice)
+    def dentroCirculo(self, tri, p):
+        #Checa se o ponto p esta dentro da circunferencia do triangulo tri
+        centro, raio = self.circulos[tri]
+        return numpy.sum(numpy.square(centro - p)) <= raio
 
-            triangulos = self.he.copy()
-            triangulos.append(self.visitar[i][0])
+    def adicionaPonto(self, p):
+        #Adiciona ponto na triangulação
+        p = numpy.asarray(p)
+        #print(p)
 
-            self.visitar.remove(self.visitar[0])
+        idx = len(self.cantos)
+        self.cantos.append(p)
 
-            #adicionando as arestar que o programa deve visitar desconsiderado a que já faz parte do Fecho convexo
-            if self.he[-2] in self.poligono and self.he[-1] in self.poligono:
-                self.visitar.append([self.he[-1], self.he[-3]])
-            elif self.he[-1] in self.poligono and self.he[-3] in self.poligono:
-                self.visitar.append([self.he[-2], self.he[-1]])
+        # Procura triangulos ruins em que o circulo contem p
+        bad_triangulos = []
+        for T in self.triangulos:
+            if self.dentroCirculo(T, p):
+                bad_triangulos.append(T)
 
+        #Borda do fecho convexo
+        bordo = []
+        # Escolhe um triangulo e uma aresta
+        T = bad_triangulos[0]
+        aresta = 0
+        # Pega o triangulo oposto da aresta
+        while True:
+            # Checa se aresta do triangulo T esta no bordo
+            tri_op = self.triangulos[T][aresta]
+            if tri_op not in bad_triangulos:
+                # Insere aresta e triangulo externo na lista do bordo
+                bordo.append((T[(aresta+1) % 3], T[(aresta-1) % 3], tri_op))
 
-        return triangulos
+                aresta = (aresta + 1) % 3
 
-    def encontraFecho(self):
-        print(self.poligono)
-        return self.poligono
-
-
-    def encontraMaiorAngulo(self, p_1, p_2):
-        cos_ant = 2
-
-        # Varáve irá guarda as coordenadas do ponto que possui o maior angulo entre os vetores
-        maior_x = 0  # Coordanada x
-        maior_y = 0  # Coordenada y
-
-
-        i = 0
-        while i < len(self.conj_pontos):
-
-            if p_1 == self.conj_pontos[i] or p_2 == self.conj_pontos[i]:
-                pass
-
-            # Caso seja diferente eu efetivamente faço a conta
+                # Checa se bordo fez loop
+                if bordo[0][0] == bordo[-1][1]:
+                    break
             else:
-                # Calculo o vetor entre o ponto que estou analisando com os outros pontos para analisar o angulo
-                v1_x = self.conj_pontos[i][0] - p_1[0]
-                v1_y = self.conj_pontos[i][1] - p_1[1]
+                aresta = (self.triangulos[tri_op].index(T) + 1) % 3
+                T = tri_op
 
-                v2_x = self.conj_pontos[i][0] - p_2[0]  # coordenada x
-                v2_y = self.conj_pontos[i][1] - p_2[1]  # coordenada y
+        # Remove triangulos muito proximos de p
+        for T in bad_triangulos:
+            del self.triangulos[T]
+            del self.circulos[T]
 
-                cos = self.angulo(v1_x, v1_y, v2_x, v2_y)  # Calculo o cos entre v1 e v2 na busca do maior cos, que então será o menor angulo
+        # Retriangula buracos deixadospor triangulos ruins
+        novos_triangulos = []
+        for (a0, a1, tri_op) in bordo:
+            # Cria novo triangulo usando ponto p e arestas extremas
+            T = (idx, a0, a1)
+            #Guarda centro e raio do triangulo
+            self.circulos[T] = self.circumcentro(T)
+            self.triangulos[T] = [tri_op, None, None]
 
-                if cos < cos_ant:
-                    cos_ant = cos
-                    maior_x = self.conj_pontos[i][0]  # E então a variável menor fica com o valor do ponto que o loop está olhando
-                    maior_y = self.conj_pontos[i][1]
+            # Tenta deixar T como vizinho do triangulo oposto
+            if tri_op:
+                # Procura vizinho de tri_op que usa aresta (a1, a0)
+                for i, neigh in enumerate(self.triangulos[tri_op]):
+                    if neigh:
+                        if a1 in neigh and a0 in neigh:
+                            self.triangulos[tri_op][i] = T
 
+            # Adiciona triangulos numa lista temporaria
+            novos_triangulos.append(T)
 
-            i = i + 1
+        # Liga novos triangulos com cada um
+        N = len(novos_triangulos)
+        for i, T in enumerate(novos_triangulos):
+            self.triangulos[T][1] = novos_triangulos[(i+1) % N]   # proximo
+            self.triangulos[T][2] = novos_triangulos[(i-1) % N]   # anterior
 
-
-        return [maior_x, maior_y]
-
-    def angulo(self, v1_x, v1_y, v2_x, v2_y):
-        # Fórmula do Produto interno
-        # cos(teta) = c = <v1,v2> / |v1||v2|
-
-        norma_v1 = math.sqrt(v1_x ** 2 + v1_y ** 2)
-
-        norma_v2 = math.sqrt(v2_x ** 2 + v2_y ** 2)
-
-        cos = ((v1_x * v2_x) + (v1_y * v2_y)) / (norma_v1 * norma_v2)
-
-        return cos
+    def pegaTriangulos(self):
+        return [(a-4, b-4, c-4)
+                for (a, b, c) in self.triangulos if a > 3 and b > 3 and c > 3]

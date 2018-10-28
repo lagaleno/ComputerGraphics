@@ -3,11 +3,10 @@
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
+import numpy
 
 from Delaunay import Delaunay
 from FechoConvexo import FechoConvexo
-
-
 
 # Variáveis Globais
 DIMX = 600  # Definindo tamanho da tela na horizontal
@@ -37,7 +36,9 @@ def main():
 
     return
 
+
 def display():
+    global triangulos
     glClearColor(1.0, 1.0, 1.0, 1.0)  # Mudando a cor do fundo para branco
     glClear(GL_COLOR_BUFFER_BIT)  # Carregando a cor do fundo no Buffer
 
@@ -61,12 +62,14 @@ def display():
 
     glPointSize(4.0)
     glColor3f(0.4, 0.4, 0.4)
-    glBegin(GL_LINE_STRIP)
 
     for triangulo in triangulos:
-        glVertex2f(triangulo[0], triangulo[1])  # Desenhando os triangulos
+        glBegin(GL_LINE_STRIP)
 
-    glEnd()
+        glVertex2f(conj_pontos[triangulo[0]][0], conj_pontos[triangulo[0]][1])
+        glVertex2f(conj_pontos[triangulo[1]][0], conj_pontos[triangulo[1]][1])
+        glVertex2f(conj_pontos[triangulo[2]][0], conj_pontos[triangulo[2]][1])
+        glEnd()
 
     glFlush()
     glutSwapBuffers()
@@ -81,6 +84,8 @@ def mouse(button, state, x, y):
 '''
 Converte as coordenadas vinda do mouse para o padrão o do OpenGL
 '''
+
+
 def converter(x, y):
     global pos_x, pos_y, conj_pontos
 
@@ -88,14 +93,15 @@ def converter(x, y):
     pos_y = -(2 * (y / DIMY) - 1)  # y é o parâmetro com a posição em pixels;
     # lembrando que pos_y irá crescer para baixo
 
-    conj_pontos.append([pos_x, pos_y]) #Adicionando a minha lista de entrada os pontos com as coordenadas certas
+    conj_pontos.append([pos_x, pos_y])  # Adicionando a minha lista de entrada os pontos com as coordenadas certas
 
 
 def keyboard(key, x, y):
     global conj_pontos, triangulos, poligono
 
     key = key.decode("utf-8")
-    if str(key) == 'r':  # Apertar a tecla r para dizer ao algoritmo que o usuário acabou de entrar com o conjunto de pontos
+    if str(
+            key) == 'r':  # Apertar a tecla r para dizer ao algoritmo que o usuário acabou de entrar com o conjunto de pontos
         '''
             Nesse caso se o usuário apertar 'r' o programa irá entende que o usuário já entrou com o conjunto de pontos
         '''
@@ -103,9 +109,20 @@ def keyboard(key, x, y):
         fechoConvexo = FechoConvexo(conj_pontos)
         poligono = fechoConvexo.jarvis()
 
-        triangulacao = Delaunay(conj_pontos, poligono)
-        triangulos = triangulacao.encontraTriangulo()
+        triangulacao = Delaunay()
+        for ponto in conj_pontos:
+            triangulacao.adicionaPonto(ponto)
 
+        triangulos = triangulacao.pegaTriangulos()
+        print(triangulos)
+        # print ("Triangulos: " + (str)(triangulacao.triangulos))
+        # print ("ArestaParaTriangulos: " + (str)(triangulacao.arestaParaTriangulo))
+        # print ("ArestasBorda: " + (str)(triangulacao.arestasBorda))
+
+    if str(key) == 'b':  # Limpar o canvas
+        conj_pontos = []
+        poligono = []
+        triangulos = []
 
     glutPostRedisplay()
 

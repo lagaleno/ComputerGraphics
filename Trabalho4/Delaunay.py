@@ -38,15 +38,16 @@ class Delaunay:
             self.he.append(self.visitar[i][1])
             self.he.append(vertice)
 
-            print(self.he)
-
             triangulos = self.he.copy()
             triangulos.append(self.visitar[i][0])
 
             self.visitar.remove(self.visitar[0])
 
             #adicionando as arestar que o programa deve visitar desconsiderado a que já faz parte do Fecho convexo
-            
+            if self.he[-2] in self.poligono and self.he[-1] in self.poligono:
+                self.visitar.append([self.he[-1], self.he[-3]])
+            elif self.he[-1] in self.poligono and self.he[-3] in self.poligono:
+                self.visitar.append([self.he[-2], self.he[-1]])
 
 
         return triangulos

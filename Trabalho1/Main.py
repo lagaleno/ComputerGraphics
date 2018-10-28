@@ -69,6 +69,7 @@ def keyboard(key, x, y):
 
     key = key.decode("utf-8")
     if str(key) == 'r': #Apertar a tecla r para rodar o algoritmo de suavizar quinas
+        pontos.append([pontos[0][0], pontos[0][1]])
         suavizar()
 
     if str(key) == 'b':

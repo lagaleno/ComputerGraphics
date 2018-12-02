@@ -1,4 +1,5 @@
 # coding=utf-8
+import random
 
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
@@ -77,7 +78,6 @@ def keyboard(key, x, y):
         '''
         curva = CurvaBezier(conj_pontos, bezier)
         bezier = curva.encontra_curva()
-        print(bezier)
 
     if str(key) == 'e': #rotação para cima
         glRotatef(-2.0, 2.0, 0.0, 0.0)
@@ -91,23 +91,22 @@ def keyboard(key, x, y):
     if str(key) == 'f': #rotação pra direita
         glRotatef(2.0, 0.0, 2.0, 0.0)
 
+    if str(key)=='b': #limpa o canvas criando uma nova poligonal
+        conj_pontos = []
+        poligonal()
+        bezier = []
+
 
     glutPostRedisplay()
 
 def poligonal():
     global conj_pontos
 
-    conj_pontos.append([round(random.uniform(-1.0, 1.0)), 0.0, 0.0])
+    i = 0
+    while i < 6:
+        conj_pontos.append([random.uniform(-0.8, 0.8), random.uniform(-0.8, 0.8), random.uniform(-0.8, 0.8)])
+        i = i+1
 
-    conj_pontos.append([-0.3, 0.5, -0.5])
-
-    conj_pontos.append([0.0, 0.5, 0.0])
-
-    conj_pontos.append([0.0, -0.5, 0.5])
-
-    conj_pontos.append([0.3, -0.5, 0.5])
-
-    conj_pontos.append([0.5, 0.0, 0.0])
 
 
 if __name__ == '__main__':
